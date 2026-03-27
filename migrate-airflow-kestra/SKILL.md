@@ -95,21 +95,65 @@ Apply all rules below. Write the flow to `<output-dir>/flow.yaml`.
 
 ## Generation rules
 
-### Task structure — always lead with `id` then `type`
+### Task structure — the YAML list marker (`-`) MUST be on the `id` line, `type` MUST be the very next line
 
-Every task block **must** begin with `id` followed immediately by `type`. No exceptions.
+This is the single most important formatting rule. Every task block in `tasks:` (including nested tasks inside `Parallel`) **must** follow this exact pattern:
+
+1. The YAML sequence dash (`-`) goes on the **`id:`** line — never on `type:` or any other property.
+2. **`type:`** is always the second line, indented to align with `id:` (no dash).
+3. All remaining properties (`containerImage`, `namespaceFiles`, `commands`, etc.) follow after `type:`, at the same indentation level as `type:`.
 
 ```yaml
-# CORRECT
+# ✅ CORRECT — dash on id, type immediately after, then everything else
 - id: fetch_products
   type: io.kestra.plugin.scripts.python.Commands
   containerImage: python:3.11
-  ...
+  namespaceFiles:
+    enabled: true
+    include:
+      - scripts/fetch_products.py
+  commands:
+    - python scripts/fetch_products.py
 
-# WRONG — never put type before id, or omit id
+# ❌ WRONG — dash on type instead of id
 - type: io.kestra.plugin.scripts.python.Commands
   id: fetch_products
+
+# ❌ WRONG — dash on containerImage
+- containerImage: python:3.11
+  id: fetch_products
+  type: io.kestra.plugin.scripts.python.Commands
+
+# ❌ WRONG — dash on namespaceFiles
+- namespaceFiles:
+    enabled: true
+  id: fetch_products
+  type: io.kestra.plugin.scripts.python.Commands
+
+# ❌ WRONG — dash on commands
+- commands:
+    - python scripts/fetch_products.py
+  id: fetch_products
+  type: io.kestra.plugin.scripts.python.Commands
+
+# ❌ WRONG — dash on dependencies
+- dependencies:
+    - pandas
+  id: fetch_products
+  type: io.kestra.plugin.scripts.python.Commands
+
+# ❌ WRONG — type is not the second property
+- id: fetch_products
+  containerImage: python:3.11
+  type: io.kestra.plugin.scripts.python.Commands
+
+# ❌ WRONG — extra blank line between id and type
+- id: fetch_products
+
+  type: io.kestra.plugin.scripts.python.Commands
 ```
+
+This rule applies everywhere a task appears: top-level `tasks:`, inside `Parallel.tasks:`, inside `WorkingDirectory.tasks:`, and in `triggers:` blocks. No exceptions.
 
 ### Container image — always `python:3.11`
 
