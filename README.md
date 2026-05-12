@@ -1,3 +1,5 @@
+⚠️ Archived and moved to [agent-skills](https://github.com/kestra-io/agent-skills/pull/4)
+
 # migration-skills
 
 Claude Code skills for migrating workflows to [Kestra](https://kestra.io).
