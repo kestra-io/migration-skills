@@ -1,3 +1,6 @@
+> [!WARNING]
+> **This repository is archived.** The `migrate-airflow-kestra` skill has been moved to [kestra-io/agent-skills](https://github.com/kestra-io/agent-skills) — see [PR #4](https://github.com/kestra-io/agent-skills/pull/4). Please use that repository going forward.
+
 # migration-skills
 
 Claude Code skills for migrating workflows to [Kestra](https://kestra.io).
